@@ -3,7 +3,7 @@
 
 ## Model & Training — Brief Introduction
 
-**中文（Chinese）**
+**中文**
 这是一个教学用的 GPT-2 风格自回归 Transformer 实现（小型复刻）。核心模块包括：词嵌入（token embedding）、可学习位置嵌入（position embedding）、多头自注意力（一次性 qkv 投影、分头并行）、前馈网络（FFN）和若干 Pre-LayerNorm Transformer Block。模型最后通过 `lm_head` 投影到词表得到 logits，并采用权重绑定（weight tying）共享 embedding 与输出权重。训练脚本使用 AdamW 优化器，线性 warmup → 线性 decay 学习率调度，支持混合精度（AMP）、梯度累积和 checkpoint（模型/优化器/调度器/scaler/step 保存与恢复）。数据处理把文本编码为连续 token 流，按 `block_size + 1` 切片得到 `(x, y)` 对：`x = chunk[:-1]`（输入），`y = chunk[1:]`（next-token 目标），便于实现自回归训练。
 
 **要点**：
